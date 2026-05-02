@@ -43,7 +43,7 @@ def clean_data(df: pd.DataFrame) -> pd.DataFrame:
                     .map({'male': 1, 'female': 0}))
 
     # Encode all Yes/No binary columns
-    yes_no_cols = [c for c in df.select_dtypes('object').columns
+    yes_no_cols = [c for c in df.select_dtypes(include=['object', 'str']).columns
                    if set(df[c].dropna().unique()).issubset({'Yes', 'No'})]
     for col in yes_no_cols:
         df[col] = df[col].map({'Yes': 1, 'No': 0})
@@ -70,7 +70,7 @@ def encode_features(df: pd.DataFrame, save_path: str = None):
     -------
     pd.DataFrame — fully encoded dataset (all numeric)
     """
-    text_cols  = df.select_dtypes(include='object').columns.tolist()
+    text_cols = df.select_dtypes(include=['object', 'str']).columns.tolist()
     df_encoded = pd.get_dummies(df, columns=text_cols,
                                 drop_first=True, dtype=int)
 
